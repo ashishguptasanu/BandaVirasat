@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">बाँदा विरासत</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="news">खबरें</string>
+    <string name="travel_services">यातायात सेवा</string>
+    <string name="contact">संपर्क</string>
+    <string name="events">खबरें</string>
+    <string name="banner_ad_unit_id">//ca-app-pub-4041777664387265/3847657639</string>
+    <string name="about">About</string>
+    <string name="developer">Developer</string>
+
+</resources>

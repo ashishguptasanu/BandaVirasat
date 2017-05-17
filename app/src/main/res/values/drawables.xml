@@ -1,0 +1,8 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <item name="ic_menu_camera" type="xml">drawable/active_state</item>
+    <item name="ic_menu_gallery" type="xml">drawable/active_state</item>
+    <item name="ic_menu_slideshow" type="xml">drawable/active_state</item>
+    <item name="ic_menu_manage" type="xml">drawable/active_state</item>
+    <item name="ic_menu_share" type="xml">drawable/active_state</item>
+    <item name="ic_menu_send" type="xml">drawable/active_state</item>
+</resources>
