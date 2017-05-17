@@ -26,7 +26,7 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.MyViewHo
         this.context = context;
     }
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView img;
+        ImageView call, mail, massage;
         public TextView mTextView1,mTextView2,mTextView3,mTextView4;
         public MyViewHolder(View v) {
             super(v);
@@ -34,6 +34,9 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.MyViewHo
             mTextView2 = (TextView) v.findViewById(R.id.contact_name);
             mTextView3 = (TextView) v.findViewById(R.id.contact_address);
             mTextView4 = (TextView) v.findViewById(R.id.contact_number);
+            call = (ImageView)v.findViewById(R.id.call_phone);
+            massage = (ImageView)v.findViewById(R.id.send_massage);
+            mail = (ImageView)v.findViewById(R.id.send_mail);
             //img = (ImageView)v.findViewById(R.id.dial);
             //img.setOnClickListener(this);
         }

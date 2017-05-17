@@ -1,5 +1,6 @@
 package ashish.com.BandaVirasat.Fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -153,6 +154,7 @@ public class Fragment extends android.support.v4.app.Fragment {
         }
         contacts.size();
     }
+    @SuppressLint("ResourceAsColor")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -220,11 +222,11 @@ public class Fragment extends android.support.v4.app.Fragment {
         edt2 = (EditText) dialogView.findViewById(R.id.edit2);
         edt3 = (EditText) dialogView.findViewById(R.id.edit3);
         edt4 = (EditText) dialogView.findViewById(R.id.edit4);
-        dialogBuilder.setTitle("Add Contact");
+        dialogBuilder.setTitle("Add Your Profile");
         dialogBuilder.setOnDismissListener(null);
-        dialogBuilder.setIcon(R.mipmap.profile_selected);
+        dialogBuilder.setIcon(R.mipmap.people_selected);
         dialogBuilder.setMessage("Note: Contacts will only show if approved by admin");
-        dialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
                 if(edt1.length() != 0  && edt2.length() !=0 && edt3.length() != 0 && edt4.length() != 0){
