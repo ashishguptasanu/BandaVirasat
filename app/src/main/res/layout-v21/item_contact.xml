@@ -79,22 +79,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-                <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="28dp"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="10dp"
-                        android:src="@drawable/call"/>
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/call"
+                        android:id="@+id/call_phone"/>
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="28dp"
+                        android:layout_weight="1"
+                        android:id="@+id/send_massage"
                         android:src="@drawable/ic_chat_black_24dp"/>
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
                         android:layout_marginRight="10dp"
+                        android:id="@+id/send_mail"
                         android:src="@drawable/mail"/>
                 </LinearLayout>
             </LinearLayout>

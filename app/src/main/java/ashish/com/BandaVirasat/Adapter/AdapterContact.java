@@ -1,14 +1,19 @@
 package ashish.com.BandaVirasat.Adapter;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,37 +26,62 @@ import ashish.com.BandaVirasat.R;
 public class AdapterContact extends RecyclerView.Adapter<AdapterContact.MyViewHolder> {
     private Context context;
     ArrayList<Contact> contacts;
+
     public AdapterContact(Context context, List<Contact> contacts) {
         this.contacts = (ArrayList<Contact>) contacts;
         this.context = context;
     }
+
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView call, mail, massage;
-        public TextView mTextView1,mTextView2,mTextView3,mTextView4;
+        public TextView mTextView1, mTextView2, mTextView3, mTextView4;
+
         public MyViewHolder(View v) {
             super(v);
             mTextView1 = (TextView) v.findViewById(R.id.contact_profession);
             mTextView2 = (TextView) v.findViewById(R.id.contact_name);
             mTextView3 = (TextView) v.findViewById(R.id.contact_address);
             mTextView4 = (TextView) v.findViewById(R.id.contact_number);
-            call = (ImageView)v.findViewById(R.id.call_phone);
-            massage = (ImageView)v.findViewById(R.id.send_massage);
-            mail = (ImageView)v.findViewById(R.id.send_mail);
+            call = (ImageView) v.findViewById(R.id.call_phone);
+            call.setOnClickListener(this);
+            massage = (ImageView) v.findViewById(R.id.send_massage);
+            massage.setOnClickListener(this);
+            mail = (ImageView) v.findViewById(R.id.send_mail);
             //img = (ImageView)v.findViewById(R.id.dial);
             //img.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.call_phone:
+                    String num = contacts.get(getAdapterPosition()).getContactNumber();
+                    callPhone(num);
+                    break;
+                case R.id.send_massage:
+                    String number = contacts.get(getAdapterPosition()).getContactNumber();
+                    sendMessage(number);
+                    break;
+                case R.id.send_mail:
+                    break;
+            }
 
-            String num = contacts.get(getAdapterPosition()).getContactNumber();
-            callPhone(num);
+
+        }
+
+        private void sendMessage(String num) {
+            Intent intentt = new Intent(Intent.ACTION_VIEW);
+            intentt.setData(Uri.parse("sms:"));
+            intentt.setType("vnd.android-dir/mms-sms");
+            //intentt.putExtra(Intent.EXTRA_TEXT, "");
+            intentt.putExtra("address", num);
+            ((Activity) context).startActivityForResult(Intent.createChooser(intentt, "Choose SMS App"), 0);
         }
 
         private void callPhone(String num) {
             Intent callIntent = new Intent(Intent.ACTION_DIAL);
-            callIntent.setData(Uri.parse(String.valueOf(num)));
-                context.startActivity(callIntent);
+            callIntent.setData(Uri.parse("tel:" + String.valueOf(num)));
+            context.startActivity(callIntent);
         }
 
 
