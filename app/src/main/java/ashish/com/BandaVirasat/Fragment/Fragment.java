@@ -5,6 +5,10 @@ import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
@@ -32,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ashish.com.BandaVirasat.Activity.HomeActivity;
 import ashish.com.BandaVirasat.Adapter.AdapterContact;
 import ashish.com.BandaVirasat.Adapter.AdapterTravel;
 import ashish.com.BandaVirasat.Model.Contact;
@@ -39,6 +45,7 @@ import ashish.com.BandaVirasat.Model.Travel;
 import ashish.com.BandaVirasat.Model.TravelResponse;
 import ashish.com.BandaVirasat.Model.Travel_;
 import ashish.com.BandaVirasat.R;
+import gun0912.tedbottompicker.TedBottomPicker;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,7 +59,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  * Created by ashish on 4/12/16.
  */
 
-public class Fragment extends android.support.v4.app.Fragment {
+public class Fragment extends android.support.v4.app.Fragment implements View.OnClickListener {
     private static final String LOG_TAG = "";
     String title;
     View view;
@@ -64,6 +71,8 @@ public class Fragment extends android.support.v4.app.Fragment {
     Context context;
     EditText edt1,edt2,edt3,edt4;
     FloatingActionButton floatingActionButton;
+    ImageView addImage;
+    Canvas canvas;
         static String DB_URL = "https://banda-virasat-6812b.firebaseio.com/";
     int status = 0;
     private ArrayList<Contact> contacts = new ArrayList<>();
@@ -222,6 +231,9 @@ public class Fragment extends android.support.v4.app.Fragment {
         edt2 = (EditText) dialogView.findViewById(R.id.edit2);
         edt3 = (EditText) dialogView.findViewById(R.id.edit3);
         edt4 = (EditText) dialogView.findViewById(R.id.edit4);
+        addImage = (ImageView) dialogView.findViewById(R.id.add_image);
+        addImage.setImageDrawable(getResources().getDrawable(R.drawable.add_photo));
+        addImage.setOnClickListener(this);
         dialogBuilder.setTitle("Add Your Profile");
         dialogBuilder.setOnDismissListener(null);
         dialogBuilder.setIcon(R.mipmap.people_selected);
@@ -301,6 +313,25 @@ public class Fragment extends android.support.v4.app.Fragment {
             }
         });
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.add_image:
+                TedBottomPicker tedBottomPicker = new TedBottomPicker.Builder(context)
+                        .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
+                            @Override
+                            public void onImageSelected(Uri uri) {
+                                addImage.setImageURI(uri);
+                            }
+                        })
+                        .create();
+
+                tedBottomPicker.show(((HomeActivity)context).getSupportFragmentManager());
+                break;
+        }
+    }
+
 }
 
 

@@ -19,8 +19,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ashish.com.BandaVirasat.Activity.HomeActivity;
 import ashish.com.BandaVirasat.Model.Contact;
 import ashish.com.BandaVirasat.R;
+import gun0912.tedbottompicker.TedBottomPicker;
 
 
 public class AdapterContact extends RecyclerView.Adapter<AdapterContact.MyViewHolder> {
@@ -47,6 +49,7 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.MyViewHo
             massage = (ImageView) v.findViewById(R.id.send_massage);
             massage.setOnClickListener(this);
             mail = (ImageView) v.findViewById(R.id.send_mail);
+
             //img = (ImageView)v.findViewById(R.id.dial);
             //img.setOnClickListener(this);
         }
@@ -64,6 +67,7 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.MyViewHo
                     break;
                 case R.id.send_mail:
                     break;
+
             }
 
 
