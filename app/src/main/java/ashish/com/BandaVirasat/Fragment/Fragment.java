@@ -352,7 +352,7 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
                                 File file = new File(uri.getPath());
                                 transferUtility.upload(
                                         "bandavirasat",        /* The bucket to upload to */
-                                        "file1",       /* The key for the uploaded object */
+                                        file.getName(),       /* The key for the uploaded object */
                                         file,          /* The file where the data to upload exists */
                                         myObjectMetadata  /* The ObjectMetadata associated with the object*/
                                 );
