@@ -24,6 +24,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -33,9 +40,12 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ashish.com.BandaVirasat.Activity.HomeActivity;
 import ashish.com.BandaVirasat.Adapter.AdapterContact;
@@ -80,6 +90,9 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     String travelUrl = "https://s3.ap-south-1.amazonaws.com";
     FirebaseDatabase mFirebaseDatabase;
     Firebase firebase;
+    AmazonS3 s3;
+    TransferUtility transferUtility;
+    ObjectMetadata myObjectMetadata;
 
     public Fragment() {
     }
@@ -95,6 +108,19 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getContext(),
+                "us-west-2:95eece11-5f58-4843-a9b7-0d5da1719d1d", // Identity Pool ID
+                Regions.US_WEST_2 // Region
+        );
+        s3 = new AmazonS3Client(credentialsProvider);
+        transferUtility = new TransferUtility(s3, getContext());
+        myObjectMetadata = new ObjectMetadata();
+
+        Map<String, String> userMetadata = new HashMap<String,String>();
+        userMetadata.put("key","value");
+
+        myObjectMetadata.setUserMetadata(userMetadata);
 
     }
 
@@ -323,6 +349,13 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
                             @Override
                             public void onImageSelected(Uri uri) {
                                 addImage.setImageURI(uri);
+                                File file = new File(uri.getPath());
+                                transferUtility.upload(
+                                        "bandavirasat",        /* The bucket to upload to */
+                                        "file1",       /* The key for the uploaded object */
+                                        file,          /* The file where the data to upload exists */
+                                        myObjectMetadata  /* The ObjectMetadata associated with the object*/
+                                );
                             }
                         })
                         .create();
