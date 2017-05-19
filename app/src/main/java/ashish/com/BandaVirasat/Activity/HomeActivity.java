@@ -155,7 +155,7 @@ public class HomeActivity extends AppCompatActivity
         }
     }
     public class PagerAdapter extends FragmentPagerAdapter {
-        int[] selectors = {R.drawable.selector_tab_one, R.drawable.selector_tab_two};
+        int[] selectors = {R.drawable.selector_tab_one, R.drawable.selector_tab_two, R.drawable.selector_tab_three, R.drawable.selector_tab_four, R.drawable.selector_tab_five};
 
         public PagerAdapter(FragmentManager fm) {
             super(fm);
@@ -166,9 +166,14 @@ public class HomeActivity extends AppCompatActivity
             switch (position) {
                 case 0:
                     return Fragment.newInstance("contact", DB_URL);
-
                 case 1:
                     return Fragment.newInstance("travel", DB_URL);
+                case 2:
+                    return Fragment.newInstance("feeds", DB_URL);
+                case 3:
+                    return Fragment.newInstance("train", DB_URL);
+                case 4:
+                    return Fragment.newInstance("nearby", DB_URL);
                 default:
                     return  PlaceholderFragment.newInstance(1, "");
             }
@@ -184,7 +189,7 @@ public class HomeActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            return 2;
+            return 5;
         }
     }
     public boolean isOnline() {

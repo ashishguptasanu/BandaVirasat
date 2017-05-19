@@ -36,7 +36,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
-                        android:textStyle="normal"
+                        android:textStyle="bold"
                         android:textColor="@color/colorPrimary"
                         android:text="  Ashish Kumar Gupta"
                         android:id="@+id/contact_name"/>
@@ -47,12 +47,6 @@
                         android:text="Doctor"
                         android:textStyle="bold"
                         android:textColor="@color/colorPrimary"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/contact_number"
-                        android:textColor="@color/colorPrimary"
-                        android:text="  +919985854465"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

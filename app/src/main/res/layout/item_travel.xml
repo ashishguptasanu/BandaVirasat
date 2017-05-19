@@ -24,6 +24,7 @@
                 android:id="@+id/start_point"
                 android:textStyle="bold"
                 android:gravity="right"
+                android:textColor="@color/colorPrimary"
                 android:layout_weight="1"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
             <ImageView
@@ -36,6 +37,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/end_point"
                 android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
                 android:layout_weight="1"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
         </LinearLayout>

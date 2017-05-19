@@ -77,11 +77,7 @@ public class AdapterTravel extends RecyclerView.Adapter<AdapterTravel.MyViewHold
             });
             dialogBuilder.setView(dialogView);
             dialog = dialogBuilder.create();
-            recyclerView.setHasFixedSize(true);
 
-
-            LinearLayoutManager llm = new LinearLayoutManager(context);
-            recyclerView.setLayoutManager(llm);
             dialog.show();
 
         }
@@ -92,13 +88,16 @@ public class AdapterTravel extends RecyclerView.Adapter<AdapterTravel.MyViewHold
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             DetailResponse request = retrofit.create(DetailResponse.class);
-
+            details.clear();
             Call<Detail> call = request.getJSON(url);
             call.enqueue(new Callback<Detail>() {
                 @Override
                 public void onResponse(Call<Detail> call, Response<Detail> response) {
                     Detail jsonResponse = response.body();
                     details = jsonResponse.getDetail();
+                    recyclerView.setHasFixedSize(true);
+                    LinearLayoutManager llm = new LinearLayoutManager(context);
+                    recyclerView.setLayoutManager(llm);
                     AdapterDialog adapterDialog = new AdapterDialog(context, (ArrayList<Detail_>) details);
                     recyclerView.setAdapter(adapterDialog);
                 }

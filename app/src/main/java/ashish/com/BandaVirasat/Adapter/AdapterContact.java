@@ -43,13 +43,13 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.MyViewHo
             mTextView1 = (TextView) v.findViewById(R.id.contact_profession);
             mTextView2 = (TextView) v.findViewById(R.id.contact_name);
             mTextView3 = (TextView) v.findViewById(R.id.contact_address);
-            mTextView4 = (TextView) v.findViewById(R.id.contact_number);
+            //mTextView4 = (TextView) v.findViewById(R.id.contact_number);
             call = (ImageView) v.findViewById(R.id.call_phone);
             call.setOnClickListener(this);
             massage = (ImageView) v.findViewById(R.id.send_massage);
             massage.setOnClickListener(this);
             mail = (ImageView) v.findViewById(R.id.send_mail);
-
+            mail.setOnClickListener(this);
             //img = (ImageView)v.findViewById(R.id.dial);
             //img.setOnClickListener(this);
         }
@@ -66,11 +66,21 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.MyViewHo
                     sendMessage(number);
                     break;
                 case R.id.send_mail:
+                    sendMail("ashishguptajiit@gmail.com");
                     break;
 
             }
 
 
+        }
+
+        private void sendMail(String s) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("message/rfc822");
+            intent.putExtra(Intent.EXTRA_EMAIL, s);
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+            intent.putExtra(Intent.EXTRA_TEXT, "I'm email body.");
+            context.startActivity(Intent.createChooser(intent, "Send Email"));
         }
 
         private void sendMessage(String num) {
@@ -104,7 +114,7 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.MyViewHo
         holder.mTextView1.setText(contacts.get(position).getContactProfession());
         holder.mTextView2.setText(contacts.get(position).getContactName());
         holder.mTextView3.setText(contacts.get(position).getContactAddress());
-        holder.mTextView4.setText(contacts.get(position).getContactNumber());
+        //holder.mTextView4.setText(contacts.get(position).getContactNumber());
 
     }
     @Override
