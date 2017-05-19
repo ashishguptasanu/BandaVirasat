@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -38,7 +40,13 @@ import com.firebase.client.FirebaseError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -71,7 +79,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class Fragment extends android.support.v4.app.Fragment implements View.OnClickListener {
     private static final String LOG_TAG = "";
-    String title;
+    String title, imageUrl;
     View view;
     RecyclerView recyclerView;
     AdapterContact adapterContact;
@@ -79,7 +87,7 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     AlertDialog.Builder dialogBuilder;
     AlertDialog b;
     Context context;
-    EditText edt1,edt2,edt3,edt4;
+    EditText edt1,edt2,edt3,edt4, edtEmail;
     FloatingActionButton floatingActionButton;
     ImageView addImage;
     Canvas canvas;
@@ -93,6 +101,9 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     AmazonS3 s3;
     TransferUtility transferUtility;
     ObjectMetadata myObjectMetadata;
+    FirebaseStorage storage;
+    StorageReference storageRef;
+    ProgressBar uploadProgress;
 
     public Fragment() {
     }
@@ -108,6 +119,8 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
                 getContext(),
                 "us-west-2:95eece11-5f58-4843-a9b7-0d5da1719d1d", // Identity Pool ID
@@ -124,13 +137,15 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
 
     }
 
-    public void saveOnline(String contactProfession, String contactName, String contactAddress, String contactNumber, int contactStatus){
+    public void saveOnline(String contactProfession, String contactName, String contactAddress, String contactNumber, int contactStatus, String imageUrl, String email){
         Contact contact = new Contact();
         contact.setContactProfession(contactProfession);
         contact.setContactName(contactName);
         contact.setContactAddress(contactAddress);
         contact.setContactNumber(contactNumber.toString());
         contact.setContactStatus(contactStatus);
+        contact.setImageUrl(imageUrl);
+        contact.setEmail(email);
         firebase.child("Contact").push().setValue(contact);
     }
 
@@ -171,6 +186,8 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
             contact.setContactAddress(dataSnapshot1.getValue(Contact.class).getContactAddress());
             contact.setContactNumber(dataSnapshot1.getValue(Contact.class).getContactNumber());
             contact.setContactStatus(dataSnapshot1.getValue(Contact.class).getContactStatus());
+            contact.setEmail(dataSnapshot1.getValue(Contact.class).getEmail());
+            contact.setImageUrl(dataSnapshot1.getValue(Contact.class).getImageUrl());
             if(dataSnapshot1.getValue(Contact.class).getContactStatus() == 1){
                 contacts.add(contact);
             }
@@ -235,10 +252,7 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
         }
     }
     public void initViews() {
-
-
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
-
         adRequest();
     }
 
@@ -257,7 +271,9 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
         edt2 = (EditText) dialogView.findViewById(R.id.edit2);
         edt3 = (EditText) dialogView.findViewById(R.id.edit3);
         edt4 = (EditText) dialogView.findViewById(R.id.edit4);
+        edtEmail = (EditText) dialogView.findViewById(R.id.edit_mail);
         addImage = (ImageView) dialogView.findViewById(R.id.add_image);
+        uploadProgress = (ProgressBar)dialogView.findViewById(R.id.progress_upload);
         addImage.setImageDrawable(getResources().getDrawable(R.drawable.add_photo));
         addImage.setOnClickListener(this);
         dialogBuilder.setTitle("Add Your Profile");
@@ -267,7 +283,7 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
         dialogBuilder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                if(edt1.length() != 0  && edt2.length() !=0 && edt3.length() != 0 && edt4.length() != 0){
+                if(edt1.length() != 0  && edt2.length() !=0 && edt3.length() != 0 && edt4.length() != 0 && imageUrl.length() != 0 && edtEmail.length() != 0){
                     sendData();
                     Toast.makeText(getContext(),"Your request has been submitted, pending for approval", Toast.LENGTH_SHORT).show();
                     locallyNotify();
@@ -288,7 +304,7 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
         b.show();
     }
     private void sendData() {
-        saveOnline(edt1.getText().toString(),edt2.getText().toString(),edt3.getText().toString(), edt4.getText().toString(), status);
+        saveOnline(edt1.getText().toString(),edt2.getText().toString(),edt3.getText().toString(), edt4.getText().toString(), status, imageUrl, edtEmail.getText().toString());
         edt1.setText("");
         edt2.setText("");
         edt3.setText("");
@@ -347,15 +363,37 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
                 TedBottomPicker tedBottomPicker = new TedBottomPicker.Builder(context)
                         .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
                             @Override
-                            public void onImageSelected(Uri uri) {
-                                addImage.setImageURI(uri);
-                                File file = new File(uri.getPath());
-                                transferUtility.upload(
-                                        "bandavirasat",        /* The bucket to upload to */
-                                        file.getName(),       /* The key for the uploaded object */
-                                        file,          /* The file where the data to upload exists */
-                                        myObjectMetadata  /* The ObjectMetadata associated with the object*/
-                                );
+                            public void onImageSelected(final Uri uri) {
+                                //Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
+                                StorageReference riversRef = storageRef.child("images/"+uri.getLastPathSegment());
+                                UploadTask uploadTask = riversRef.putFile(uri);
+
+// Register observers to listen for when the download is done or if it fails
+                                uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                        addImage.setVisibility(View.GONE);
+                                        uploadProgress.setVisibility(View.VISIBLE);
+                                    }
+                                });
+                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle unsuccessful uploads
+                                    }
+                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                        Log.v("Download URI", String.valueOf(downloadUrl));
+                                        uploadProgress.setVisibility(View.GONE);
+                                        addImage.setVisibility(View.VISIBLE);
+                                        addImage.setImageURI(uri);
+                                        imageUrl = String.valueOf(downloadUrl);
+                                    }
+                                });
+
                             }
                         })
                         .create();

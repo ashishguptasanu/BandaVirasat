@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +17,15 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ashish.com.BandaVirasat.Activity.HomeActivity;
 import ashish.com.BandaVirasat.Model.Contact;
 import ashish.com.BandaVirasat.R;
+import de.hdodenhof.circleimageview.CircleImageView;
 import gun0912.tedbottompicker.TedBottomPicker;
 
 
@@ -36,6 +40,7 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.MyViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView call, mail, massage;
+        CircleImageView userImage;
         public TextView mTextView1, mTextView2, mTextView3, mTextView4;
 
         public MyViewHolder(View v) {
@@ -50,6 +55,7 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.MyViewHo
             massage.setOnClickListener(this);
             mail = (ImageView) v.findViewById(R.id.send_mail);
             mail.setOnClickListener(this);
+            userImage = (CircleImageView) v.findViewById(R.id.user_image);
             //img = (ImageView)v.findViewById(R.id.dial);
             //img.setOnClickListener(this);
         }
@@ -114,7 +120,9 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.MyViewHo
         holder.mTextView1.setText(contacts.get(position).getContactProfession());
         holder.mTextView2.setText(contacts.get(position).getContactName());
         holder.mTextView3.setText(contacts.get(position).getContactAddress());
+        Picasso.with(context).load(contacts.get(position).getImageUrl()).into(holder.userImage);
         //holder.mTextView4.setText(contacts.get(position).getContactNumber());
+        //Log.v("url",contacts.get(position).getImageUrl());
 
     }
     @Override

@@ -8,7 +8,7 @@ import android.os.Parcelable;
  */
 
 public class Contact implements Parcelable {
-    private String contactProfession, contactName, contactAddress, contactNumber;
+    private String contactProfession, contactName, contactAddress, contactNumber, imageUrl, email;
     private int contactStatus;
 
     public Contact(){
@@ -19,6 +19,18 @@ public class Contact implements Parcelable {
     }
     public void setContactProfession(String contactProfession){
         this.contactProfession = contactProfession;
+    }
+    public String getImageUrl(){
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl){
+        this.imageUrl = imageUrl;
+    }
+    public String getEmail(){
+        return email;
+    }
+    public void setEmail(String email){
+        this.email = email;
     }
 
 

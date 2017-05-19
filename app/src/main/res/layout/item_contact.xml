@@ -21,12 +21,12 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:orientation="horizontal">
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="0dp"
                     android:layout_weight="0.3"
                     android:layout_margin="10dp"
-                    android:layout_height="48dp"
-                    android:src="@mipmap/otziv3"/>
+                    android:id="@+id/user_image"
+                    android:layout_height="48dp" />
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
