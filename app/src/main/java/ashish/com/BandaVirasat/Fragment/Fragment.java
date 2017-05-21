@@ -60,6 +60,9 @@ import ashish.com.BandaVirasat.Adapter.AdapterContact;
 import ashish.com.BandaVirasat.Adapter.AdapterNearBy;
 import ashish.com.BandaVirasat.Adapter.AdapterTravel;
 import ashish.com.BandaVirasat.Model.Contact;
+import ashish.com.BandaVirasat.Model.NearByPlacesResponse;
+import ashish.com.BandaVirasat.Model.Place;
+import ashish.com.BandaVirasat.Model.Place_;
 import ashish.com.BandaVirasat.Model.Travel;
 import ashish.com.BandaVirasat.Model.TravelResponse;
 import ashish.com.BandaVirasat.Model.Travel_;
@@ -96,8 +99,10 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
         static String DB_URL = "https://banda-virasat-6812b.firebaseio.com/";
     int status = 0;
     private ArrayList<Contact> contacts = new ArrayList<>();
+    private List<Place_> places = new ArrayList<>();
     private List<Travel_> travel = new ArrayList<>();
     String travelUrl = "https://s3.ap-south-1.amazonaws.com";
+    String NEAR_BY_BASE_URL = "https://firebasestorage.googleapis.com/v0/b/banda-virasat-6812b.appspot.com/";
     FirebaseDatabase mFirebaseDatabase;
     Firebase firebase;
     AmazonS3 s3;
@@ -106,7 +111,6 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     FirebaseStorage storage;
     StorageReference storageRef;
     ProgressBar uploadProgress;
-    String[] nearByPlaces = new String[]{"Khajuraho"};
 
     public Fragment() {
     }
@@ -259,14 +263,41 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
         adRequest();
         if (getArguments() != null && getArguments().containsKey("title")) {
             if (title.equalsIgnoreCase("nearby")) {
-                adapterNearBy = new AdapterNearBy(context, nearByPlaces);
+                loadNearByPlaces();
+
+
+            }
+        }
+    }
+
+    private void loadNearByPlaces() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(NEAR_BY_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        NearByPlacesResponse request = retrofit.create(NearByPlacesResponse.class);
+        Call<Place> call = request.getPlaces();
+        //
+        call.enqueue(new Callback<Place>() {
+            @Override
+            public void onResponse(Call<Place> call, Response<Place> response) {
+
+
+                Place jsonResponse = response.body();
+                places = jsonResponse.getPlaces();
+                adapterNearBy = new AdapterNearBy(context, places);
                 LinearLayoutManager llm3 = new LinearLayoutManager(getActivity());
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(llm3);
                 recyclerView.setAdapter(adapterNearBy);
 
+
             }
-        }
+            @Override
+            public void onFailure(Call<Place> call, Throwable t) {
+                Log.d("Error",t.getMessage());
+            }
+        });
     }
 
 

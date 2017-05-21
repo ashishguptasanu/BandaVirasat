@@ -8,43 +8,47 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ashish.com.BandaVirasat.Model.Contact;
+import ashish.com.BandaVirasat.Model.Place;
+import ashish.com.BandaVirasat.Model.Place_;
 import ashish.com.BandaVirasat.R;
 
 
 public class AdapterNearBy extends RecyclerView.Adapter<AdapterNearBy.MyViewHolder> {
-
     private Context context;
-    String[] myDataSet;
-    public AdapterNearBy(Context context, String[] myDataSet) {
-        this.myDataSet = myDataSet;
+    ArrayList<Place_> places;
+    public AdapterNearBy(Context context, List<Place_> places) {
+        this.places = (ArrayList<Place_>) places;
         this.context = context;
     }
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView tv1;
+        TextView tv1, tvDescription;
+        ImageView imgNearBy;
         FloatingActionButton fabNearMe;
+
         public MyViewHolder(View itemView) {
             super(itemView);
             tv1 = (TextView)itemView.findViewById(R.id.tv_near_by);
+            tvDescription = (TextView)itemView.findViewById(R.id.tv_near_by_description);
             fabNearMe = (FloatingActionButton)itemView.findViewById(R.id.fab_nearme);
+            imgNearBy = (ImageView)itemView.findViewById(R.id.image_near_by);
             fabNearMe.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            Uri gmmIntentUri = Uri.parse("google.navigation:q=24.8292115,79.8600449");
 
-// Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+            Uri gmmIntentUri = Uri.parse("google.navigation:q="+ places.get(getAdapterPosition()).getLat() + "," + places.get(getAdapterPosition()).getLong());
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-// Make the Intent explicit by setting the Google Maps package
             mapIntent.setPackage("com.google.android.apps.maps");
-
-// Attempt to start an activity that can handle the Intent
             context.startActivity(mapIntent);
 
         }
@@ -58,12 +62,14 @@ public class AdapterNearBy extends RecyclerView.Adapter<AdapterNearBy.MyViewHold
 
     @Override
     public void onBindViewHolder(AdapterNearBy.MyViewHolder holder, int position) {
-        holder.tv1.setText(myDataSet[position]);
+        holder.tv1.setText(places.get(position).getPlaceName());
+        holder.tvDescription.setText(places.get(position).getPlaceDescription());
+        Picasso.with(context).load(places.get(position).getImageUrl()).into(holder.imgNearBy);
     }
 
     @Override
     public int getItemCount() {
-        return myDataSet.length;
+        return places.size();
     }
 
 
