@@ -89,7 +89,7 @@ public class AdapterTravel extends RecyclerView.Adapter<AdapterTravel.MyViewHold
             });
             dialogBuilder.setView(dialogView);
             dialog = dialogBuilder.create();
-
+            //do
             dialog.show();
 
         }
