@@ -1,7 +1,10 @@
 package ashish.com.BandaVirasat.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,6 +32,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by ashish on 7/12/16.
  */
@@ -36,6 +45,7 @@ public class AdapterTravel extends RecyclerView.Adapter<AdapterTravel.MyViewHold
     int position;
     AlertDialog dialog;
     ArrayList<Travel_> travel;
+    ProgressBar mTravelProgress;
     private List<Detail_> details = new ArrayList<>();
     public AdapterTravel(Context context, List<Travel_> travel) {
         this.travel = (ArrayList<Travel_>) travel;
@@ -56,9 +66,9 @@ public class AdapterTravel extends RecyclerView.Adapter<AdapterTravel.MyViewHold
 
             v.setOnClickListener(this);
         }
+        @SuppressLint("SetJavaScriptEnabled")
         @Override
         public void onClick(View v) {
-
             position = getAdapterPosition();
             String url = travel.get(getAdapterPosition()).getJsonUrl();
             loadJson(url);
@@ -68,6 +78,8 @@ public class AdapterTravel extends RecyclerView.Adapter<AdapterTravel.MyViewHold
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
             final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_travel, null);
             recyclerView = (RecyclerView) dialogView.findViewById(R.id.recycler_dialog);
+            mTravelProgress = (ProgressBar) dialogView.findViewById(R.id.progress_bus_dialog);
+            mTravelProgress.setVisibility(View.VISIBLE);
             dialogBuilder.setTitle("Bus Timings");
             dialogBuilder.setIcon(R.mipmap.travel_selected);
             dialogBuilder.setMessage("For more details, Call 139");
@@ -93,6 +105,7 @@ public class AdapterTravel extends RecyclerView.Adapter<AdapterTravel.MyViewHold
             call.enqueue(new Callback<Detail>() {
                 @Override
                 public void onResponse(Call<Detail> call, Response<Detail> response) {
+                    mTravelProgress.setVisibility(View.GONE);
                     Detail jsonResponse = response.body();
                     details = jsonResponse.getDetail();
                     recyclerView.setHasFixedSize(true);
