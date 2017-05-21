@@ -57,6 +57,7 @@ import java.util.Map;
 
 import ashish.com.BandaVirasat.Activity.HomeActivity;
 import ashish.com.BandaVirasat.Adapter.AdapterContact;
+import ashish.com.BandaVirasat.Adapter.AdapterNearBy;
 import ashish.com.BandaVirasat.Adapter.AdapterTravel;
 import ashish.com.BandaVirasat.Model.Contact;
 import ashish.com.BandaVirasat.Model.Travel;
@@ -84,6 +85,7 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     RecyclerView recyclerView;
     AdapterContact adapterContact;
     AdapterTravel adapter3;
+    AdapterNearBy adapterNearBy;
     AlertDialog.Builder dialogBuilder;
     AlertDialog b;
     Context context;
@@ -104,6 +106,7 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     FirebaseStorage storage;
     StorageReference storageRef;
     ProgressBar uploadProgress;
+    String[] nearByPlaces = new String[]{"Khajuraho"};
 
     public Fragment() {
     }
@@ -254,6 +257,16 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     public void initViews() {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         adRequest();
+        if (getArguments() != null && getArguments().containsKey("title")) {
+            if (title.equalsIgnoreCase("nearby")) {
+                adapterNearBy = new AdapterNearBy(context, nearByPlaces);
+                LinearLayoutManager llm3 = new LinearLayoutManager(getActivity());
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(llm3);
+                recyclerView.setAdapter(adapterNearBy);
+
+            }
+        }
     }
 
 
