@@ -59,7 +59,11 @@ import ashish.com.BandaVirasat.Activity.HomeActivity;
 import ashish.com.BandaVirasat.Adapter.AdapterContact;
 import ashish.com.BandaVirasat.Adapter.AdapterNearBy;
 import ashish.com.BandaVirasat.Adapter.AdapterTravel;
+import ashish.com.BandaVirasat.Adapter.FeedsAdapter;
 import ashish.com.BandaVirasat.Model.Contact;
+import ashish.com.BandaVirasat.Model.Feed;
+import ashish.com.BandaVirasat.Model.Feed_;
+import ashish.com.BandaVirasat.Model.FeedsResponse;
 import ashish.com.BandaVirasat.Model.NearByPlacesResponse;
 import ashish.com.BandaVirasat.Model.Place;
 import ashish.com.BandaVirasat.Model.Place_;
@@ -89,6 +93,7 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     AdapterContact adapterContact;
     AdapterTravel adapter3;
     AdapterNearBy adapterNearBy;
+    FeedsAdapter adapterFeeds;
     AlertDialog.Builder dialogBuilder;
     AlertDialog b;
     Context context;
@@ -101,8 +106,10 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     private ArrayList<Contact> contacts = new ArrayList<>();
     private List<Place_> places = new ArrayList<>();
     private List<Travel_> travel = new ArrayList<>();
+    private List<Feed_> feeds = new ArrayList<>();
     String travelUrl = "https://s3.ap-south-1.amazonaws.com";
     String NEAR_BY_BASE_URL = "https://firebasestorage.googleapis.com/v0/b/banda-virasat-6812b.appspot.com/";
+    String FEEDS_BASE_URL = "https://firebasestorage.googleapis.com/v0/b/banda-virasat-6812b.appspot.com/";
     FirebaseDatabase mFirebaseDatabase;
     Firebase firebase;
     AmazonS3 s3;
@@ -264,10 +271,38 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
         if (getArguments() != null && getArguments().containsKey("title")) {
             if (title.equalsIgnoreCase("nearby")) {
                 loadNearByPlaces();
-
-
+            }
+            if(title.equalsIgnoreCase("feeds")){
+                loadFeeds();
             }
         }
+    }
+
+    private void loadFeeds() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(FEEDS_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        FeedsResponse request = retrofit.create(FeedsResponse.class);
+        Call<Feed> call = request.getFeeds();
+        //
+        call.enqueue(new Callback<Feed>() {
+            @Override
+            public void onResponse(Call<Feed> call, Response<Feed> response) {
+                Feed jsonResponse = response.body();
+                feeds = jsonResponse.getFeeds();
+                Collections.reverse(feeds);
+                adapterFeeds = new FeedsAdapter(context, feeds);
+                LinearLayoutManager llm4 = new LinearLayoutManager(getActivity());
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(llm4);
+                recyclerView.setAdapter(adapterFeeds);
+            }
+            @Override
+            public void onFailure(Call<Feed> call, Throwable t) {
+                Log.d("Error",t.getMessage());
+            }
+        });
     }
 
     private void loadNearByPlaces() {
