@@ -6,4 +6,6 @@
     <color name="colorCard">#eeeeee</color>
     <color name="white">#fff</color>
     <color name="layout">#455a64</color>
+    <color name="dusk_yellow">#f57f17</color>
+    <color name="gray">#bdbdbd</color>
 </resources>

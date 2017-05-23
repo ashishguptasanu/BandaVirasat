@@ -58,6 +58,7 @@ import java.util.Map;
 import ashish.com.BandaVirasat.Activity.HomeActivity;
 import ashish.com.BandaVirasat.Adapter.AdapterContact;
 import ashish.com.BandaVirasat.Adapter.AdapterNearBy;
+import ashish.com.BandaVirasat.Adapter.AdapterTrain;
 import ashish.com.BandaVirasat.Adapter.AdapterTravel;
 import ashish.com.BandaVirasat.Adapter.FeedsAdapter;
 import ashish.com.BandaVirasat.Model.Contact;
@@ -67,6 +68,9 @@ import ashish.com.BandaVirasat.Model.FeedsResponse;
 import ashish.com.BandaVirasat.Model.NearByPlacesResponse;
 import ashish.com.BandaVirasat.Model.Place;
 import ashish.com.BandaVirasat.Model.Place_;
+import ashish.com.BandaVirasat.Model.Train;
+import ashish.com.BandaVirasat.Model.TrainResponse;
+import ashish.com.BandaVirasat.Model.Train_;
 import ashish.com.BandaVirasat.Model.Travel;
 import ashish.com.BandaVirasat.Model.TravelResponse;
 import ashish.com.BandaVirasat.Model.Travel_;
@@ -93,6 +97,7 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     AdapterContact adapterContact;
     AdapterTravel adapter3;
     AdapterNearBy adapterNearBy;
+    AdapterTrain adapterTrain;
     FeedsAdapter adapterFeeds;
     AlertDialog.Builder dialogBuilder;
     AlertDialog b;
@@ -107,6 +112,7 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     private List<Place_> places = new ArrayList<>();
     private List<Travel_> travel = new ArrayList<>();
     private List<Feed_> feeds = new ArrayList<>();
+    private List<Train_> trains = new ArrayList<>();
     String travelUrl = "https://s3.ap-south-1.amazonaws.com";
     String NEAR_BY_BASE_URL = "https://firebasestorage.googleapis.com/v0/b/banda-virasat-6812b.appspot.com/";
     String FEEDS_BASE_URL = "https://firebasestorage.googleapis.com/v0/b/banda-virasat-6812b.appspot.com/";
@@ -275,7 +281,37 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
             if(title.equalsIgnoreCase("feeds")){
                 loadFeeds();
             }
+            if(title.equalsIgnoreCase("train")){
+                loadTrain();
+            }
         }
+    }
+
+    private void loadTrain() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(FEEDS_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        TrainResponse request = retrofit.create(TrainResponse.class);
+        Call<Train> call = request.getTrain();
+        //
+        call.enqueue(new Callback<Train>() {
+            @Override
+            public void onResponse(Call<Train> call, Response<Train> response) {
+                Train jsonResponse = response.body();
+                trains = jsonResponse.getTrain();
+                Collections.shuffle(trains);
+                adapterTrain = new AdapterTrain(context, trains);
+                LinearLayoutManager llm5 = new LinearLayoutManager(getActivity());
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(llm5);
+                recyclerView.setAdapter(adapterTrain);
+            }
+            @Override
+            public void onFailure(Call<Train> call, Throwable t) {
+                Log.d("Error",t.getMessage());
+            }
+        });
     }
 
     private void loadFeeds() {
