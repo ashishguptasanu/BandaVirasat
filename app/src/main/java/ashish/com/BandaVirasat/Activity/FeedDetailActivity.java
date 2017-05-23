@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ public class FeedDetailActivity extends AppCompatActivity {
     TextView time, shortDescription, longDescription;
     ImageView imgFeedDetail;
     String imageUrl, shortDes, longDes, mTime;
+    Menu menu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +31,12 @@ public class FeedDetailActivity extends AppCompatActivity {
         mTime = getIntent().getStringExtra("time");
         initViews();
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.feed_detail_menu, menu);
+        return true;
     }
 
     private void initViews() {
