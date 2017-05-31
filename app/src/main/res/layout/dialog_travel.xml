@@ -9,29 +9,30 @@
 
         <TextView
             android:layout_width="0dp"
-            android:text="Stoppage"
+            android:text="बस क्रमांक "
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
             android:textStyle="bold"
+            android:gravity="center"
             android:textColor="@color/colorPrimary"
             android:layout_height="wrap_content" />
         <TextView
             android:layout_width="0dp"
-            android:text="Arrival"
+            android:text="प्रस्थान का समय"
             android:gravity="center"
             android:layout_weight="1"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
             android:layout_height="wrap_content" />
         <TextView
             android:layout_width="0dp"
-            android:text="Departure"
+            android:text="पहुंचने का समय"
             android:layout_marginRight="10dp"
             android:gravity="end"
             android:layout_weight="1"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
             android:layout_height="wrap_content" />

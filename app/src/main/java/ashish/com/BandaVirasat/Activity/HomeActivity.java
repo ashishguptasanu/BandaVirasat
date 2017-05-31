@@ -155,7 +155,7 @@ public class HomeActivity extends AppCompatActivity
         }
     }
     public class PagerAdapter extends FragmentPagerAdapter {
-        int[] selectors = {R.drawable.selector_tab_one, R.drawable.selector_tab_two, R.drawable.selector_tab_three, R.drawable.selector_tab_four, R.drawable.selector_tab_five};
+        int[] selectors = {R.drawable.selector_tab_one, R.drawable.selector_tab_two, R.drawable.selector_tab_three,R.drawable.selector_tab_four, R.drawable.selector_tab_five};
 
         public PagerAdapter(FragmentManager fm) {
             super(fm);

@@ -8,6 +8,6 @@ import retrofit2.http.GET;
  */
 
 public interface TravelResponse {
-    @GET("/bandavirasat/travel_main")
+    @GET("/v0/b/banda-virasat-6812b.appspot.com/o/json%2Ftravel_main?alt=media&token=8e3bb132-20d0-4640-8d1f-119d2049a461")
     Call<Travel> getTravel();
 }

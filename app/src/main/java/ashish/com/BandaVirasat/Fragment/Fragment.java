@@ -113,7 +113,7 @@ public class Fragment extends android.support.v4.app.Fragment implements View.On
     private List<Travel_> travel = new ArrayList<>();
     private List<Feed_> feeds = new ArrayList<>();
     private List<Train_> trains = new ArrayList<>();
-    String travelUrl = "https://s3.ap-south-1.amazonaws.com";
+    String travelUrl = "https://firebasestorage.googleapis.com";
     String NEAR_BY_BASE_URL = "https://firebasestorage.googleapis.com/v0/b/banda-virasat-6812b.appspot.com/";
     String FEEDS_BASE_URL = "https://firebasestorage.googleapis.com/v0/b/banda-virasat-6812b.appspot.com/";
     FirebaseDatabase mFirebaseDatabase;

@@ -29,7 +29,7 @@ public class AdapterTrain extends RecyclerView.Adapter<AdapterTrain.MyViewHolder
         this.context = context;
     }
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView tvTrainNum, tvTrainName, tvTrainFrom, tvTrainTo, tvTrainFromName, tvTrainToName;
+        TextView tvTrainNum, tvTrainName, tvTrainFrom, tvTrainTo, tvTrainFromName, tvTrainToName, tvTrainDay;
         RatingBar mRatingBar;
         public MyViewHolder(View v) {
             super(v);
@@ -40,6 +40,7 @@ public class AdapterTrain extends RecyclerView.Adapter<AdapterTrain.MyViewHolder
             tvTrainFromName = (TextView)itemView.findViewById(R.id.train_from_name);
             tvTrainToName = (TextView)itemView.findViewById(R.id.train_to_name);
             tvTrainTo = (TextView)itemView.findViewById(R.id.train_to);
+            tvTrainDay = (TextView)itemView.findViewById(R.id.train_days);
             mRatingBar.setNumStars(5);
             mRatingBar.setMax(5);
             mRatingBar.setStepSize((float) 0.5);
@@ -70,6 +71,7 @@ public class AdapterTrain extends RecyclerView.Adapter<AdapterTrain.MyViewHolder
         holder.tvTrainTo.setText(trains.get(position).getTrainToCode());
         holder.tvTrainFromName.setText(trains.get(position).getTrainFromName());
         holder.tvTrainToName.setText(trains.get(position).getTrainToName());
+        holder.tvTrainDay.setText(trains.get(position).getDays());
 
     }
     @Override
